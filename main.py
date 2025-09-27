@@ -47,6 +47,11 @@ FALLBACK_MODEL_OPTIONS: List[str] = ["gemma3:12b", "gemma3:27b"]
 DEFAULT_MODEL = FALLBACK_MODEL_OPTIONS[0]
 DEFAULT_SYSTEM_PROMPT = "You are a helpful assistant. Use concise markdown."
 
+# ---- Page config ----
+st.set_page_config(
+    page_title="Chat",
+    page_icon="🤖",
+)
 # =========================
 # MESSAGE TYPE
 # =========================
