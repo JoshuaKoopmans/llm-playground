@@ -1,0 +1,113 @@
+/* ---------- Global sensible defaults ---------- */
+:root {
+  /* Fallback values */
+  --gap: 12px;
+  --radius: 12px;
+  --surface: #ffffff;
+  --surface-2: #f6f7f9;
+  --text: #111;
+  --muted: #6b7280;
+}
+
+/* Prefer dark if available */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --surface: #0f1115;
+    --surface-2: #151823;
+    --text: #e5e7eb;
+    --muted: #9ca3af;
+  }
+}
+
+/* ---------- 1) Viewport height: use dvh when supported, else fallback ---------- */
+/* Newer Chrome (>=106) supports dvh; Chrome 100 does not. */
+@supports (height: 100dvh) {
+  .vh-70 { height: 70dvh; }
+  .vh-80 { height: 80dvh; }
+  .vh-90 { height: 90dvh; }
+}
+@supports not (height: 100dvh) {
+  /* Chrome 100 path */
+  .vh-70 { height: 70vh; }
+  .vh-80 { height: 80vh; }
+  .vh-90 { height: 90vh; }
+}
+
+/* ---------- 2) Container queries: fallback to media queries ---------- */
+/* Chrome 100 has no container queries. */
+@supports (container-type: inline-size) {
+  .card-grid { container-type: inline-size; container-name: cards; }
+  @container cards (width > 800px) { .card { flex: 1 1 33%; } }
+  @container cards (width <= 800px) { .card { flex: 1 1 100%; } }
+}
+@supports not (container-type: inline-size) {
+  /* Fallback: coarse media queries */
+  .card-grid { display: flex; flex-wrap: wrap; gap: var(--gap); }
+  .card { flex: 1 1 100%; }
+  @media (min-width: 900px) { .card { flex: 1 1 calc(33.333% - var(--gap)); } }
+}
+
+/* ---------- 3) :has() selector fallbacks ---------- */
+/* Chrome 100 does not support :has(). Provide class-based fallbacks. */
+@supports selector(:has(*)) {
+  .field:has(input:invalid) { outline: 2px solid #ef4444; }
+}
+@supports not selector(:has(*)) {
+  /* Add `.is-invalid` via JS when needed */
+  .field.is-invalid { outline: 2px solid #ef4444; }
+}
+
+/* ---------- 4) Flex gap fallback (just in case) ---------- */
+/* Chrome 100 supports gap in flex, but keep a fallback */
+@supports (gap: 12px) {
+  .row { display: flex; gap: var(--gap); }
+}
+@supports not (gap: 12px) {
+  .row { display: flex; }
+  .row > * { margin-right: var(--gap); }
+  .row > *:last-child { margin-right: 0; }
+}
+
+/* ---------- 5) Backdrop blur fallback ---------- */
+@supports ((-webkit-backdrop-filter: blur(8px)) or (backdrop-filter: blur(8px))) {
+  .glass { background: rgba(255,255,255,0.6); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+}
+@supports not ((-webkit-backdrop-filter: blur(8px)) or (backdrop-filter: blur(8px))) {
+  .glass { background: rgba(255,255,255,0.9); }
+}
+
+/* ---------- 6) Scrollbar stability fallback ---------- */
+/* Chrome 100 lacks `scrollbar-gutter: stable;` → emulate via padding */
+@supports (scrollbar-gutter: stable) {
+  .stable-scroll { scrollbar-gutter: stable; }
+}
+@supports not (scrollbar-gutter: stable) {
+  .stable-scroll { padding-right: 12px; }
+}
+
+/* ---------- 7) Sticky fallback ---------- */
+@supports (position: sticky) {
+  .sticky-top { position: sticky; top: 0; z-index: 10; }
+}
+@supports not (position: sticky) {
+  .sticky-top { position: relative; } /* becomes non-sticky */
+}
+
+/* ---------- 8) Forms & focus states ---------- */
+:where(button, .btn) {
+  border-radius: var(--radius);
+  border: 1px solid #e5e7eb;
+  background: var(--surface-2);
+  color: var(--text);
+  padding: 8px 12px;
+}
+:where(button, .btn):focus-visible {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+/* ---------- 9) Useful utilities ---------- */
+.surface { background: var(--surface); color: var(--text); }
+.surface-2 { background: var(--surface-2); color: var(--text); }
+.muted { color: var(--muted); }
+.round { border-radius: var(--radius); }
